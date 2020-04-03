@@ -54,7 +54,7 @@ const downloadarticle=createLogic({
         // debugger
         console.log("payload check",action.payload)
 
-        HTTPclient.post(endPoints.DOWNLOAD_ARTICLE+action.payload.article_id)
+        HTTPclient.post(endPoints.DOWNLOAD_ARTICLE+action.payload)
             .then(resp=> {
                 // debugger
                 console.log(resp.data)

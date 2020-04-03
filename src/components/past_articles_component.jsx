@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter} from 'react-router-dom'
 import { downloadArticleActions,getArticleActions} from '../actions'
+import { saveAs } from 'file-saver';
 
 export class PastArticlesComponent extends Component {
     constructor(props){
@@ -11,7 +12,7 @@ export class PastArticlesComponent extends Component {
         this.state={
             articleData:null,
             modalShow: false,
-            
+            contentData:null,
         }
     }
 
@@ -20,11 +21,8 @@ export class PastArticlesComponent extends Component {
     }
 
     onDownloadClick=(item)=>{
-        console.log(item)
-        // this.props.downloadArticleActions.downloadArticle(obj)
-
-        // var blob = new Blob([this.state.item.caption], { type: "text/pdf" });
-        // saveAs(blob, `Article${Date()}`)
+        // console.log(item.id)
+        this.props.downloadArticleActions.downloadArticle(item.id)
     }
 
     onFileClick=()=>{
@@ -59,6 +57,14 @@ export class PastArticlesComponent extends Component {
         };
     }
 
+    componentDidUpdate(prevProps){
+        console.log(this.props.contentData)
+        if(this.props.contentData!=prevProps.contentData){
+            var blob = new Blob([this.props.contentData], { type: "text/pdf" });
+            saveAs(blob, `Article${Date()}`)
+        }
+    }
+
     render() {
         let {articleData}=this.state
 
@@ -74,7 +80,7 @@ export class PastArticlesComponent extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {articleData && articleData.map(property => {
+                            {articleData && Array.isArray(articleData) && articleData.map(property => {
                                 return (
                                     <tr>
                                         <td><a href='#' onClick={this.onFileClick}>{property.dateTime}</a></td>
