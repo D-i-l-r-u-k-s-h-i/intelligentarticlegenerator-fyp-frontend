@@ -3,24 +3,24 @@ import { Carousel,
     CarouselItem,
     CarouselControl,
     CarouselIndicators,
-    CarouselCaption} from 'reactstrap';
+    CarouselCaption, Alert} from 'reactstrap';
 import {Container ,Row,Col} from 'react-bootstrap'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { withRouter} from 'react-router-dom'
-import { saveArticleActions} from '../actions'
 import { saveAs } from 'file-saver';
-
 import items from '../data/items'
+import SaveArticleNameModal from './save_article_name_modal';
+import EditArticleModal from './edit_article_modal';
 
 export class GeneratedComponent extends Component {
     constructor(props){
         super(props);
         this.state={
+            articleid:0,
             activeIndex:0,
             animating:false,
             items:items.data,
-            item:items.data[0]
+            item:items.data[0],
+            modalShow: false,
+            editModalShow: false,
         }
     }
 
@@ -29,17 +29,10 @@ export class GeneratedComponent extends Component {
         saveAs(blob, `Article${Date()}`)
     }
 
-    onEditClick=()=>{
-        
-    }
-
-    onSaveClick=()=>{
-        // console.log(this.state.item.caption)
-        this.props.saveArticleActions.saveArticle(this.state.item.caption)
-    }
-
     render() {
         let {animating,activeIndex,items}=this.state
+        let modalClose = () => this.setState({ modalShow: false });
+        let editModalClose = () => this.setState({ editModalShow: false });
 
         const next = () => {
             if (animating) return;
@@ -126,8 +119,11 @@ export class GeneratedComponent extends Component {
                         </Col>
                         <Col>
                             <button type="button" onClick={this.onDownloadClick} className="btn btn-primary btn-lg">Download</button><br/><br/>
-                            <button type="button" onClick={this.onEditClick} className="btn btn-secondary btn-lg">Edit</button><br/><br/>
-                            <button type="button" onClick={this.onSaveClick} className="btn btn-warning btn-lg">Save</button><br/><br/>
+                            <button type="button" onClick={() => this.setState({ editModalShow: true })} className="btn btn-secondary btn-lg">Edit</button><br/><br/>
+                            <button type="button" onClick={() => this.setState({ modalShow: true })} className="btn btn-warning btn-lg">Save</button><br /><br />
+                            
+                            <SaveArticleNameModal show={this.state.modalShow} props={this.state} onHide={modalClose}/>
+                            <EditArticleModal show={this.state.editModalShow} props={this.state} onHide={editModalClose}/>
                         </Col>
                     </Row>
                 </Container>
@@ -141,18 +137,4 @@ Carousel.defaultProps = {
     autoPlay: false, 
     interval: false
 } 
-function mapDispatchToProps (dispatch){
-    return{
-        saveArticleActions: bindActionCreators(saveArticleActions,dispatch),
-        // downloadArticleActions: bindActionCreators(downloadArticleActions,dispatch)
-    }
-}
-
-
-function mapStateToProps (state){
-    return{
-        ...state.Article,
-    }
-}
-
-export default withRouter(connect(mapStateToProps,mapDispatchToProps) (GeneratedComponent))
+export default GeneratedComponent

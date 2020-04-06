@@ -3,16 +3,20 @@ import { Table ,Container} from 'reactstrap';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter} from 'react-router-dom'
-import { downloadArticleActions,getArticleActions} from '../actions'
+import { downloadArticleActions,getArticleActions,getHtmlActions} from '../actions'
 import { saveAs } from 'file-saver';
+import EditArticleModal from './edit_article_modal';
 
 export class PastArticlesComponent extends Component {
     constructor(props){
         super(props);
         this.state={
-            articleData:null,
+            articlesData:null,
             modalShow: false,
             contentData:null,
+            editModalShow: false,
+            htmlData:null,
+            itemId:null
         }
     }
 
@@ -25,30 +29,64 @@ export class PastArticlesComponent extends Component {
         this.props.downloadArticleActions.downloadArticle(item.id)
     }
 
-    onFileClick=()=>{
+    onFileClick=(item)=>{
         //display pdf
-        console.log("display pdf")
+        // console.log(item.articleFile)
+        let arrrayBuffer = this.base64ToArrayBuffer(item.articleFile);
+        
+        let blob = new Blob([arrrayBuffer], { type: "application/pdf" });
+        let link = window.URL.createObjectURL(blob);
+        // console.log(link)
+        window.open(link, '_blank');
     }
 
+    base64ToArrayBuffer=(base64)=> {
+        let binaryString = window.atob(base64);
+        let binaryLen = binaryString.length;
+        let bytes = new Uint8Array(binaryLen);
+        for (var i = 0; i < binaryLen; i++) {
+            var ascii = binaryString.charCodeAt(i);
+            bytes[i] = ascii;
+        }
+        return bytes;
+    }
+    
+
     onEditClick=(item)=>{
-        console.log(item)
+        this.setState({
+            itemId:item.id,
+        })
+        
+        //gets html content of article
+        this.props.getHtmlActions.getHTMLText(item.id)
+
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
-        console.log(nextProps)
+        // console.log(nextProps)
         let newProps={}
-        if (nextProps.articleData && nextProps.articleData !== prevState.articleData) {
-            newProps.articleData = nextProps.articleData
+        if (nextProps.articlesData && nextProps.articlesData !== prevState.articlesData) {
+            newProps.articlesData = nextProps.articlesData
+        }
+
+        if (nextProps.htmlData && nextProps.htmlData !== prevState.htmlData) {
+            newProps.htmlData = nextProps.htmlData
         }
         // if (nextProps.location.hash && (nextProps.location.hash !== prevState.hash)) {
         //     return {
         //         hash: nextProps.location.hash
         //     }
         // }
-        if(newProps.articleData){
+        if(newProps.articlesData){
             return{
                loaded: true,
-               articleData:newProps.articleData,
+               htmlData:newProps.htmlData,
+               articlesData:newProps.articlesData,
+            }
+        }
+        if(newProps.htmlData){
+            return{
+               htmlData:newProps.htmlData,
             }
         }
         // console.log(newProps)
@@ -57,16 +95,25 @@ export class PastArticlesComponent extends Component {
         };
     }
 
-    componentDidUpdate(prevProps){
-        console.log(this.props.contentData)
+    componentDidUpdate(prevProps,prevState){
+        console.log(prevState)
         if(this.props.contentData!=prevProps.contentData){
             var blob = new Blob([this.props.contentData], { type: "text/pdf" });
             saveAs(blob, `Article${Date()}`)
         }
+
+        if(this.props.htmlData!=prevProps.htmlData){
+            this.setState({
+                editModalShow:true,
+            })
+        }
+        
     }
 
     render() {
-        let {articleData}=this.state
+        // console.log(this.state)
+        let {articlesData}=this.state
+        let editModalClose = () => this.setState({ editModalShow: false });
 
         return (
             <div>
@@ -74,23 +121,28 @@ export class PastArticlesComponent extends Component {
                     <Table hover>
                         <thead>
                             <tr>
-                                <th>File</th>
+                                <th>Article Name</th>
+                                <th>File(Last Modified Date)</th>
                                 <th>Edit Article</th>
                                 <th>Download Article</th>
+                                <th>Created Date</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {articleData && Array.isArray(articleData) && articleData.map(property => {
+                            {articlesData && Array.isArray(articlesData) && articlesData.map(property => {
                                 return (
                                     <tr>
-                                        <td><a href='#' onClick={this.onFileClick}>{property.dateTime}</a></td>
+                                        <td>{property.articleName}</td>
+                                        <td><a href='#' onClick={()=>this.onFileClick(property)}>{property.dateTime}</a></td>
                                         <td><button type="button" onClick={() => this.onDownloadClick(property)} className="btn btn-success btn-lg">Download</button></td>
                                         <td><button type="button" onClick={() => this.onEditClick(property)} className="btn btn-secondary btn-lg">Edit</button></td>
+                                        <td>{property.createdDate}</td>
                                     </tr>
                                 )
                             })}
                         </tbody>
                     </Table>
+                    <EditArticleModal show={this.state.editModalShow} props={this.state} onHide={editModalClose}/>
                 </Container>
                 
             </div>
@@ -102,6 +154,7 @@ function mapDispatchToProps (dispatch){
     return{
         downloadArticleActions: bindActionCreators(downloadArticleActions,dispatch),
         getArticleActions:bindActionCreators(getArticleActions,dispatch),
+        getHtmlActions:bindActionCreators(getHtmlActions,dispatch),
     }
 }
 

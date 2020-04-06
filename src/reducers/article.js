@@ -1,10 +1,12 @@
-import {saveArticleTypes,downloadArticleTypes,getArticleTypes} from '../actions'
+import {saveArticleTypes,downloadArticleTypes,getArticleTypes,editArticleTypes,getHtmlTypes} from '../actions'
 
 import {handleActions} from "redux-actions"
 
 const initialState={
     articleData:null,
-    contentData:null
+    contentData:null,
+    htmlData:null,
+    articlesData:null
 }
 
 export default handleActions({
@@ -15,6 +17,15 @@ export default handleActions({
         ...state,loading:false,articleData:payload
     }),
     [saveArticleTypes.FAIL_SAVE_ARTICLE]:(state,{payload})=>({
+        ...state,loading:false,articleData:null
+    }),
+    [editArticleTypes.EDIT_ARTICLE]:(state,{payload})=>({
+        ...state,loading:true
+    }),
+    [editArticleTypes.SUCCESS_EDIT_ARTICLE]:(state,{payload})=>({
+        ...state,loading:false,articleData:payload
+    }),
+    [editArticleTypes.FAIL_EDIT_ARTICLE]:(state,{payload})=>({
         ...state,loading:false,articleData:null
     }),
     [downloadArticleTypes.DOWNLOAD_ARTICLE]:(state,{payload})=>({
@@ -30,9 +41,18 @@ export default handleActions({
         ...state,loading:true
     }),
     [getArticleTypes.SUCCESS_GET_ARTICLES]:(state,{payload})=>({
-        ...state,loading:false,articleData:payload
+        ...state,loading:false,articlesData:payload
     }),
     [getArticleTypes.FAIL_GET_ARTICLES]:(state,{payload})=>({
-        ...state,loading:false,articleData:null
+        ...state,loading:false,articlesData:null
+    }),
+    [getHtmlTypes.GET_HTML_TEXT]:(state,{payload})=>({
+        ...state,loading:true
+    }),
+    [getHtmlTypes.SUCCESS_GET_HTML_TEXT]:(state,{payload})=>({
+        ...state,loading:false,htmlData:payload
+    }),
+    [getHtmlTypes.FAIL_GET_HTML_TEXT]:(state,{payload})=>({
+        ...state,loading:false,htmlData:null
     }),
 },initialState)

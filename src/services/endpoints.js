@@ -11,3 +11,5 @@ export const EDIT_ARTICLE="/article/edit"
 export const DOWNLOAD_ARTICLE="/article/download/"
 
 export const GET_ARTICLES="/article/articles"
+
+export const GET_HTML="/article/richtext/"

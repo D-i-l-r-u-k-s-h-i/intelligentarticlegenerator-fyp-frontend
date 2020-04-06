@@ -46,7 +46,7 @@ export class HomeComponent extends Component {
         this.setState({
             visible:false
         })
-        window.location.reload();
+        // window.location.reload();
     }
 
     onSubmitClick=()=>{
