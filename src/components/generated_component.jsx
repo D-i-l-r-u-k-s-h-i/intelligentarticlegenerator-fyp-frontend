@@ -3,10 +3,9 @@ import { Carousel,
     CarouselItem,
     CarouselControl,
     CarouselIndicators,
-    CarouselCaption, Alert} from 'reactstrap';
+    CarouselCaption} from 'reactstrap';
 import {Container ,Row,Col} from 'react-bootstrap'
 import { saveAs } from 'file-saver';
-import items from '../data/items'
 import SaveArticleNameModal from './save_article_name_modal';
 import EditArticleModal from './edit_article_modal';
 
@@ -17,8 +16,8 @@ export class GeneratedComponent extends Component {
             articleid:0,
             activeIndex:0,
             animating:false,
-            items:items.data,
-            item:items.data[0],
+            items:this.props.props && this.props.props,
+            item:this.props.props && this.props.props[0],
             modalShow: false,
             editModalShow: false,
         }
@@ -33,6 +32,8 @@ export class GeneratedComponent extends Component {
         let {animating,activeIndex,items}=this.state
         let modalClose = () => this.setState({ modalShow: false });
         let editModalClose = () => this.setState({ editModalShow: false });
+
+        console.log(this.props)
 
         const next = () => {
             if (animating) return;
@@ -75,7 +76,7 @@ export class GeneratedComponent extends Component {
 
                 >
                     {/* <img src={item.src} alt={item.altText} /> */}
-                    <CarouselCaption captionText={<div class="ex1">{item.caption}<br/>{item.caption}<br/>{item.caption}</div>}/>
+                    <CarouselCaption captionText={<div class="ex1">{item.caption}</div>}/>
                 </CarouselItem>
             );
           });

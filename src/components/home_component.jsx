@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter} from 'react-router-dom'
-import { lmResultActions } from '../actions'
+import { lmResultActions,getGeneratedArticleActions } from '../actions'
 import { Container ,Row,Col,Form,FormGroup,Input,Label,Button,Alert} from 'reactstrap';
+import {Spinner} from 'react-bootstrap'
 import GeneratedComponent from './generated_component';
 import EditLmResultModal from './edit_lm_result_modal';
 
@@ -18,6 +19,8 @@ export class HomeComponent extends Component {
             samples:null,
             details:null,
             modalShow: false,
+            componentShow:false,
+            loading:false,
         }
     }
 
@@ -50,12 +53,27 @@ export class HomeComponent extends Component {
     }
 
     onSubmitClick=()=>{
+        this.props.getGeneratedArticleActions.getGeneratedArticles(this.state)
+        this.setState({
+            loading:true
+        })
+    }
 
+    componentDidUpdate(prevProps){
+        if(this.props.generatedData != prevProps.generatedData){
+            console.log(this.props.generatedData)
+            this.setState({
+                loading:false,
+                componentShow :true,
+            })
+        }
+        
     }
 
     render() {
 
         let modalClose = () => this.setState({ modalShow: false });
+        let showSpinner=()=>this.setState({loading:true});
 
         return (
             <div>
@@ -69,6 +87,7 @@ export class HomeComponent extends Component {
                                 </FormGroup>
                                 <Button onClick={this.onGenerateClick}>Generate</Button><br/><br/>
                                 <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
+                                    {this.props.lmData!=null?null:<Spinner animation="border" />}
                                     {this.props.lmData && this.props.lmData.completed_text}
                                     <hr/>
                                     <div className="text-muted"><small>Click Submit if the sentence generated gives correct context or Press edit to give proper context.</small></div>
@@ -94,8 +113,9 @@ export class HomeComponent extends Component {
                         </Row>
                     </Form>
                     <hr/><br/><br/><br/><br/>
-                    <GeneratedComponent/>
-                    <EditLmResultModal show={this.state.modalShow} props={this.props.lmData && this.props.lmData.completed_text} onHide={modalClose}/>
+                    {this.state.loading?<Spinner animation="border" />:null}
+                    {this.state.componentShow ?<GeneratedComponent props={this.props.generatedData && this.props.generatedData}/>:null}
+                    <EditLmResultModal show={this.state.modalShow} props={this.props.lmData && this.props.lmData.completed_text} stateAsProps={this.state} onHide={modalClose} onSubmitClickk={showSpinner}/>
                 </Container>
             </div>
         )
@@ -104,7 +124,8 @@ export class HomeComponent extends Component {
 
 function mapDispatchToProps (dispatch){
     return{
-        lmResultActions: bindActionCreators(lmResultActions,dispatch)
+        lmResultActions: bindActionCreators(lmResultActions,dispatch),
+        getGeneratedArticleActions: bindActionCreators(getGeneratedArticleActions,dispatch)
     }
 }
 

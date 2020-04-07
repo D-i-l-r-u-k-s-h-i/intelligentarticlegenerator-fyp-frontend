@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Modal ,Button} from 'react-bootstrap'
-// import { addAdminActions} from '../actions'
-// import { connect } from 'react-redux'
-// import { bindActionCreators } from 'redux'
-// import { withRouter} from 'react-router-dom'
+import { getGeneratedArticleActions } from '../actions'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { withRouter} from 'react-router-dom'
 import {Form, FormGroup, Label, Input} from 'reactstrap';
 
 export class EditLmResultModal extends Component {
@@ -20,7 +20,15 @@ export class EditLmResultModal extends Component {
     }
 
     onSubmitClick=()=>{
+        let obj={
+            details:this.state.editedData,
+            length:this.props.stateAsProps.length,
+            temperature:this.props.stateAsProps.temperature,
+            samples:this.props.stateAsProps.samples,
+        }
 
+        this.props.onSubmitClickk()
+        this.props.getGeneratedArticleActions.getGeneratedArticles(obj)
         this.props.onHide()
     }
 
@@ -39,11 +47,8 @@ export class EditLmResultModal extends Component {
                                     <Input onChange={this.handleTextArea} type="textarea" defaultValue={this.props.props}/>
                                 </FormGroup>
                                 
-                                <Button onClick={this.onSubmitClick} className="btn-lg btn-dark btn-block" type="submit">Submit</Button>
+                                <Button onClick={this.onSubmitClick} className="btn-lg btn-dark btn-block" type="button">Submit</Button>
                             </Form>
-                            {/* <Alert color="warning" isOpen={this.state.visible} toggle={this.onDismiss}> */}
-                        {/* {this.props.SignUpData} */}
-                    {/* </Alert> */}
                     </Modal.Body>
                 </Modal>
             </div>
@@ -51,4 +56,17 @@ export class EditLmResultModal extends Component {
     }
 }
 
-export default EditLmResultModal
+function mapDispatchToProps (dispatch){
+    return{
+        getGeneratedArticleActions: bindActionCreators(getGeneratedArticleActions,dispatch)
+    }
+}
+
+
+function mapStateToProps (state){
+    return{
+        ...state.LMResult,
+    }
+}
+
+export default withRouter(connect(mapStateToProps,mapDispatchToProps) (EditLmResultModal))

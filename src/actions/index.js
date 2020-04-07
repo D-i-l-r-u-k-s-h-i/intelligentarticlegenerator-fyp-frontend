@@ -5,6 +5,7 @@ import * as DownloadArticle from './downloadArticle'
 import * as GetArticles from './getArticles'
 import * as EditArticle from './editArticle'
 import * as GetHTMLText from './getHTML'
+import * as GetGeneratedArticles from './getGeneratedArticles'
 
 export{
     Login as loginTypes
@@ -34,6 +35,10 @@ export{
     GetHTMLText as getHtmlTypes
 }
 
+export{
+    GetGeneratedArticles as getGeneratedArticleTypes
+}
+
 
 export const loginActions=Login.default;
 
@@ -48,3 +53,5 @@ export const getArticleActions=GetArticles.default;
 export const editArticleActions=EditArticle.default;
 
 export const getHtmlActions= GetHTMLText.default;
+
+export const getGeneratedArticleActions=GetGeneratedArticles.default;
