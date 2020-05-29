@@ -25,7 +25,10 @@ export const setAuth = () => {
             if (error.response.status === 401) {
                 localStorage.removeItem('jwt');
                 localStorage.removeItem('user');
-                window.location = '/'
+                // window.location = '/'
+                console.log(error.response.data.message)
+                let obj={data:error.response.data.message}
+                return obj
             }
             else {
                 return Promise.reject(error);
@@ -50,7 +53,10 @@ export const setAuth = () => {
             if (error.response.status === 401) {
                 localStorage.removeItem('jwt');
                 localStorage.removeItem('user');
-                window.location = '/'
+                // window.location = '/'
+                console.log(error.response.data.message)
+                let obj={data:error.response.data.message}
+                return obj
             }
             else {
                 return Promise.reject(error);

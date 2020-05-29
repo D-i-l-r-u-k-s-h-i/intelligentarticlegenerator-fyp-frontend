@@ -15,24 +15,14 @@ function NavBarComponent() {
         return(
             <Nav className="ml-auto">
                 <Nav.Item className="p-2 mb-1 text-white">{localStorage.getItem("user")}</Nav.Item>
-                {/* <Nav.Link href="/cart"><span className="btn btn-light btn-circle btn-sm">&#128722;</span></Nav.Link> */}
+                
                 <NavDropdown title="&#9881; Options" id="nav-dropdown" >
                     <LinkContainer to={{
                         pathname: '/pastarticles',
-                        // props: {
-                        //     optionSelected: "CURRENT"
-                        // }
+                        
                     }}>
                         <NavDropdown.Item eventKey="4.1">Past Articles</NavDropdown.Item>
                     </LinkContainer>
-                    {/* <LinkContainer to={{
-                        pathname: '/orders2',
-                        props: {
-                            optionSelected: "PAST"
-                        }
-                    }}>
-                        <NavDropdown.Item eventKey="4.3">Order History</NavDropdown.Item>
-                    </LinkContainer> */}
                     <NavDropdown.Divider />
                     <LinkContainer onClick={() => {
 
@@ -45,7 +35,7 @@ function NavBarComponent() {
                         <NavDropdown.Item eventKey="4.4">Logout</NavDropdown.Item>
                     </LinkContainer>
                 </NavDropdown>
-                {localStorage.getItem("roleId") == 1 ? <Nav.Link href='/admin' >Dashboard</Nav.Link>:null}
+                {localStorage.getItem("roleId") == 1 ? <Nav.Link href='/admin' >Dashboard</Nav.Link>:"``````"}
             </Nav>
         )
     }

@@ -27,4 +27,13 @@
  
 }
 
+.page-wrap {
+  min-height: calc(100vh - 100px);
+}
 
+.site-footer {
+  height: 100px;
+  background-color: #3b4d64;
+  text-align: center;
+  color: white;
+}

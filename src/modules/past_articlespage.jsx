@@ -7,8 +7,10 @@ export class PasrArticlesPage extends Component {
     render() {
         return (
             <div>
+                <div className='page-wrap'>
                 <NavBarComponent/>
                 <PastArticlesComponent/>
+                </div>
                 <Footer/>
             </div>
         )
