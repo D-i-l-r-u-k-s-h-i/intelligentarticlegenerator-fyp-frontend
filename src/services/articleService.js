@@ -5,6 +5,7 @@ import {saveArticleActions,saveArticleTypes,
         getArticleActions,getArticleTypes,
         editArticleActions,editArticleTypes,
         getHtmlActions, getHtmlTypes,
+        editNameActions,editNameTypes
 } from "../actions"
 
 import * as endPoints from './endpoints'
@@ -136,6 +137,40 @@ const editarticle=createLogic({
     }
 })
 
+const editarticlename=createLogic({
+    type:editNameTypes.EDIT_NAME,
+    latest:true,
+    debounce:1000,
+
+    process({
+        action
+    },dispatch,done){
+        let HTTPclient=api
+
+        // debugger
+        console.log("payload check",action.payload)
+
+        let obj={
+            id:action.payload.articleId,
+            articleName:action.payload.editedName
+        }
+
+        HTTPclient.post(endPoints.EDIT_NAME,obj)
+            .then(resp=> {
+                // debugger
+                console.log(resp.data)
+                dispatch(editNameActions.editNameSuccess(resp.data))
+            })
+            .catch(err=>{
+                var errormsg="Failed to edit Article name";
+                if (err && err.code === "ECONNABORTED") {
+                    errormsg = "Please check your internet connection.";
+                }
+                dispatch(editNameActions.editNameFail(errormsg))
+            }).then(()=>done());
+    }
+})
+
 const gethtml=createLogic({
     type:getHtmlTypes.GET_HTML_TEXT,
     latest:true,
@@ -170,5 +205,6 @@ export default [
     downloadarticle,
     getarticles,
     editarticle,
-    gethtml
+    gethtml,
+    editarticlename
 ]

@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { withRouter} from 'react-router-dom'
 import { lmResultActions,getGeneratedArticleActions } from '../actions'
 import { Container ,Row,Col,Form,FormGroup,Input,Label,Button,Alert,FormFeedback,FormText} from 'reactstrap';
-import {Spinner} from 'react-bootstrap'
+import {Spinner,OverlayTrigger,Tooltip} from 'react-bootstrap'
 import GeneratedComponent from './generated_component';
 import EditLmResultModal from './edit_lm_result_modal';
 
@@ -125,12 +125,21 @@ export class HomeComponent extends Component {
         }
         
     }
+    renderTooltip=(props)=> {
+        return (
+          <Tooltip id="button-tooltip" {...props}>
+            Linguistic variety- controls the diversity/randomness of word predictions generated. High value entered will give more surprising text while low values will give more accurate and predictable text.
+          </Tooltip>
+        );
+      }
 
     render() {
 
         let modalClose = () => this.setState({ modalShow: false });
         let showSpinner=()=>this.setState({loading:true});
 
+        console.log(this.props.generatedData)
+        
         return (
             <div>
                 <Container className="themed-container">
@@ -171,19 +180,28 @@ export class HomeComponent extends Component {
                                         Please enter a positive whole number
                                     </FormFeedback>
                                 </FormGroup>
-                                <FormGroup>
-                                    <Label for="temperature">Linguistic Variety</Label>
-                                    <Input onChange={this.handleTemperature} type="number" name="temperature" id="exampletemp" placeholder="Enter a value between 0 & 1"  min="0.0" step="0.1" max="1"
-                                    valid={this.state.validate.temperatureState === 'has-success'} invalid={this.state.validate.temperatureState === 'has-danger'} />
-                                    <FormFeedback invalid>
-                                        Please enter only decimals between 0 & 1 up to 2 decimal places
+                                <OverlayTrigger
+                                    placement="bottom"
+                                    delay={{ show: 250, hide: 400 }}
+                                    overlay={this.renderTooltip}
+                                >
+                                    <FormGroup>
+
+                                        <Label for="temperature">Linguistic Variety</Label>
+                                        <Input onChange={this.handleTemperature} type="number" name="temperature" id="exampletemp" placeholder="Enter a value between 0 & 1" min="0.0" step="0.1" max="1"
+                                            valid={this.state.validate.temperatureState === 'has-success'} invalid={this.state.validate.temperatureState === 'has-danger'} />
+                                        <FormFeedback invalid>
+                                            Please enter only decimals between 0 & 1 up to 2 decimal places
                                     </FormFeedback>
-                                </FormGroup>
+
+
+                                    </FormGroup>
+                                </OverlayTrigger>
                             </Col>
                         </Row>
                     </Form>
-                    <hr/><br/><br/><br/><br/>
-                    {this.state.loading?<Spinner animation="border" />:null}
+                    <hr/><br/><br/><br/>
+                    {this.state.loading?<div className="text-center"><br/><Spinner animation="border" /><br/><br/><br/></div>:null}
                     {this.state.componentShow ?<GeneratedComponent props={this.props.generatedData && this.props.generatedData}/>:null}
                     <EditLmResultModal show={this.state.modalShow} props={this.props.lmData && this.props.lmData.completed_text} stateAsProps={this.state} onHide={modalClose} onSubmitClickk={showSpinner}/>
                 </Container>

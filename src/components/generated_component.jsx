@@ -16,15 +16,15 @@ export class GeneratedComponent extends Component {
             articleid:0,
             activeIndex:0,
             animating:false,
-            items:this.props.props && this.props.props,
-            item:this.props.props && this.props.props[0],
+            items:this.props.props && this.props.props.generated_text,
+            item:this.props.props && this.props.props.generated_text[0],
             modalShow: false,
             editModalShow: false,
         }
     }
 
     onDownloadClick=()=>{
-        var blob = new Blob([this.state.item.caption], { type: "text/pdf" });
+        var blob = new Blob([this.state.item], { type: "text/pdf" });
         saveAs(blob, `Article${Date()}`)
     }
 
@@ -33,7 +33,7 @@ export class GeneratedComponent extends Component {
         let modalClose = () => this.setState({ modalShow: false });
         let editModalClose = () => this.setState({ editModalShow: false });
 
-        console.log(this.props)
+        console.log(this.props.props.generated_text)
 
         const next = () => {
             if (animating) return;
@@ -65,18 +65,21 @@ export class GeneratedComponent extends Component {
           }
 
         
-          const slides = items.map((item) => {
+          const slides = items.map((item,index) => {
+            console.log(item.id)
             return (
                 <CarouselItem
                     onExiting={() => this.setState({ animating: false })}
                     onExited={() => this.setState({ animating: false })}
                     className="custom-tag"
                     tag="div"
-                    key={item.id}
+                    key={index}
 
                 >
+                    <CarouselCaption captionText={<div className="ex1">Sample No. {index+1} <br/><br/><br/> {item}</div>}/>
+                    
                     {/* <img src={item.src} alt={item.altText} /> */}
-                    <CarouselCaption captionText={<div class="ex1">{item.caption}</div>}/>
+                    {/* <CarouselCaption captionText={<div class="ex2">{item}</div>}/> */}
                 </CarouselItem>
             );
           });

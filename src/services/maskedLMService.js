@@ -57,7 +57,7 @@ const getGenerated=createLogic({
         let obj={
             length :action.payload.length,
             temperature:action.payload.temperature,
-            noOfSamples :action.payload.samples,
+            noOfSamples:action.payload.samples,
             articleDetails:action.payload.details,
         }
 

@@ -1,4 +1,4 @@
-import {saveArticleTypes,downloadArticleTypes,getArticleTypes,editArticleTypes,getHtmlTypes} from '../actions'
+import {saveArticleTypes,downloadArticleTypes,getArticleTypes,editArticleTypes,getHtmlTypes,editNameTypes} from '../actions'
 
 import {handleActions} from "redux-actions"
 
@@ -54,5 +54,51 @@ export default handleActions({
     }),
     [getHtmlTypes.FAIL_GET_HTML_TEXT]:(state,{payload})=>({
         ...state,loading:false,htmlData:null
+    }),
+    [editNameTypes.EDIT_NAME]:(state,{payload})=>({
+        ...state, addItem: {
+            ...state.addItem,
+            loading:true,
+            articlesData: payload
+        }
+    }),
+    [editNameTypes.SUCCESS_EDIT_NAME]:(state,{payload})=>{
+        // console.log(state)
+        // console.log(state.addItem.articlesData)
+
+        if (state.articlesData && Array.isArray(state.articlesData) && state.articlesData.length !== 0) {
+            state.articlesData && state.articlesData.map((removeId, index) => {
+                // console.log(removeId)
+                // console.log(object)
+                if (removeId.id == state.addItem.articlesData.articleId) {
+                    // console.log(state.addItem.articlesData.editedName)
+                    state.addItem.articlesData.articleName=state.addItem.articlesData.editedName
+                    state.addItem.articlesData.articleData=removeId.articleData
+                    state.addItem.articlesData.articleFile=removeId.articleFile
+                    state.addItem.articlesData.createdDate=removeId.createdDate
+                    state.addItem.articlesData.dateTime=removeId.dateTime
+                    state.addItem.articlesData.lastModifiedDate=removeId.lastModifiedDate
+                    state.addItem.articlesData.articleStatus=removeId.articleStatus
+                    state.addItem.articlesData.id=removeId.id
+                    
+                    console.log(state.addItem.articlesData)
+                    return state.articlesData.splice(index, 1, state.addItem.articlesData)
+                }
+                })
+
+        }
+        
+        return {
+            ...state,
+            addItem: {
+                ...state.addItem,
+                loading: false,
+                addItem: true,
+                addItemError: undefined
+            }
+        }
+    },
+    [editNameTypes.FAIL_EDIT_NAME]:(state,{payload})=>({
+        ...state,loading:false,articlesData:null
     }),
 },initialState)

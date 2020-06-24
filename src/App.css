@@ -37,3 +37,60 @@
   text-align: center;
   color: white;
 }
+
+.background_container{
+  background: url(https://images.designtrends.com/wp-content/uploads/2015/11/30162351/Plain-White-Backgrounds1.jpg) no-repeat;
+  min-height: 100vh; 
+  background-position: center;
+  background-size: cover;
+}
+
+.app-form-item {
+  margin: 0 0 15px 0;
+}
+
+.app-form-item label {
+  /* text-transform: uppercase; */
+  display: block;
+  font-weight: 400;
+  margin: 0 0 8px 0;
+}
+
+.app-form-item input[type='text'],
+.app-form-item input[type='email'],
+.app-form-item input[type='password'] .app-form-item input[type='text']:focus,
+.app-form-item input[type='text'] :active,
+.app-form-item input[type='email']:focus,
+.app-form-item input[type='email'] :active,
+.app-form-item input[type='password']:focus,
+.app-form-item input[type='password'] :active .app-card {
+  overflow: hidden;
+  position: relative;
+  background: #FFFFFF;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+}
+
+@media (min-width: 768px) {
+  .app-card {
+    width: 350px;
+    position: relative;
+    left: 700px;
+  }
+}
+
+
+.app-card .app-card-header-inner {
+  padding: 10px 20px;
+}
+
+.app-card .app-card-content .app-card-content-inner {
+  padding: 20px;
+}
+
+.app-card-content .app-card-content-inner,
+.app-card-content .app-card-content-inner {
+  padding: 40px;
+  background-color: #FFFFFF;
+}

@@ -6,6 +6,7 @@ import { withRouter} from 'react-router-dom'
 import { downloadArticleActions,getArticleActions,getHtmlActions} from '../actions'
 import { saveAs } from 'file-saver';
 import EditArticleModal from './edit_article_modal';
+import EditNameModal from './edit_name_modal';
 
 export class PastArticlesComponent extends Component {
     constructor(props){
@@ -16,7 +17,9 @@ export class PastArticlesComponent extends Component {
             contentData:null,
             editModalShow: false,
             htmlData:null,
-            itemId:null
+            itemId:null,
+            itemName:null,
+            editNameModalShow:false
         }
     }
 
@@ -59,6 +62,18 @@ export class PastArticlesComponent extends Component {
         
         //gets html content of article
         this.props.getHtmlActions.getHTMLText(item.id)
+
+    }
+
+    onEditNameClick=(item)=>{
+        this.setState({
+            itemId:item.id,
+            itemName:item.articleName,
+            editNameModalShow:true
+        })
+        
+        //gets html content of article
+        // this.props.getHtmlActions.getHTMLText(item.id)
 
     }
 
@@ -114,6 +129,7 @@ export class PastArticlesComponent extends Component {
         // console.log(this.state)
         let {articlesData}=this.state
         let editModalClose = () => this.setState({ editModalShow: false });
+        let editNameModalClose = () => this.setState({ editNameModalShow: false });
 
         return (
             <div>
@@ -132,7 +148,7 @@ export class PastArticlesComponent extends Component {
                             {articlesData && Array.isArray(articlesData) && articlesData.map(property => {
                                 return (
                                     <tr>
-                                        <td>{property.articleName}</td>
+                                        <td>{property.articleName}{'   '}<button type="button" style={{'font-size':'20px'}} onClick={() => this.onEditNameClick(property)} className="btn btn-light btn-sm">&#9998;</button></td>
                                         <td><a href='#' onClick={()=>this.onFileClick(property)}>{property.dateTime}</a></td>
                                         <td><button type="button" onClick={() => this.onDownloadClick(property)} className="btn btn-success btn-lg">Download</button></td>
                                         <td><button type="button" onClick={() => this.onEditClick(property)} className="btn btn-secondary btn-lg">Edit</button></td>
@@ -143,6 +159,7 @@ export class PastArticlesComponent extends Component {
                         </tbody>
                     </Table>
                     <EditArticleModal show={this.state.editModalShow} props={this.state} onHide={editModalClose}/>
+                    <EditNameModal show={this.state.editNameModalShow} props={this.state} onHide={editNameModalClose}/>
                 </Container>
                 
             </div>
