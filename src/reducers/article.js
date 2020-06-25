@@ -1,4 +1,4 @@
-import {saveArticleTypes,downloadArticleTypes,getArticleTypes,editArticleTypes,getHtmlTypes,editNameTypes} from '../actions'
+import {saveArticleTypes,downloadArticleTypes,getArticleTypes,editArticleTypes,getHtmlTypes,editNameTypes,deleteArticleTypes} from '../actions'
 
 import {handleActions} from "redux-actions"
 
@@ -99,6 +99,38 @@ export default handleActions({
         }
     },
     [editNameTypes.FAIL_EDIT_NAME]:(state,{payload})=>({
+        ...state,loading:false,articlesData:null
+    }),
+    [deleteArticleTypes.DELETE_ARTICLE]:(state,{payload})=>({
+        ...state, removeItem: {
+            ...state.removeItem,
+            loading:true,
+            articlesData: payload
+        }
+    }),
+    [deleteArticleTypes.SUCCESS_DELETE_ARTICLE]:(state,{payload})=>{
+        // console.log(payload)
+        console.log(state)
+        if (state.articlesData && Array.isArray(state.articlesData) && state.articlesData.length !== 0) {
+            state.articlesData && state.articlesData.map((removeId, index) => {
+                console.log(removeId.craftId)
+                console.log(state.removeItem.articlesData)
+                if (removeId.id == state.removeItem.articlesData) {
+                    return state.articlesData.splice(index, 1);
+                }
+            })
+        }
+        return {
+            ...state,
+            removeItem: {
+                ...state.removeItem,
+                loading: false,
+                removeItem: true,
+                removeItemError: undefined,
+            }
+        }
+    },
+    [deleteArticleTypes.FAIL_DELETE_ARTICLE]:(state,{payload})=>({
         ...state,loading:false,articlesData:null
     }),
 },initialState)

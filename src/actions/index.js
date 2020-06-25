@@ -8,6 +8,7 @@ import * as GetHTMLText from './getHTML'
 import * as GetGeneratedArticles from './getGeneratedArticles'
 import * as SignUp from './signup'
 import * as EditName from './editName'
+import * as DeleteArticle from './deleteArticle'
 
 export{
     Login as loginTypes
@@ -31,6 +32,10 @@ export{
 
 export{
     EditArticle as editArticleTypes
+}
+
+export{
+    DeleteArticle as deleteArticleTypes
 }
 
 export{
@@ -60,6 +65,8 @@ export const downloadArticleActions=DownloadArticle.default;
 export const getArticleActions=GetArticles.default;
 
 export const editArticleActions=EditArticle.default;
+
+export const deleteArticleActions=DeleteArticle.default;
 
 export const editNameActions=EditName.default;
 

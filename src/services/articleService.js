@@ -5,7 +5,8 @@ import {saveArticleActions,saveArticleTypes,
         getArticleActions,getArticleTypes,
         editArticleActions,editArticleTypes,
         getHtmlActions, getHtmlTypes,
-        editNameActions,editNameTypes
+        editNameActions,editNameTypes,
+        deleteArticleActions,deleteArticleTypes
 } from "../actions"
 
 import * as endPoints from './endpoints'
@@ -171,6 +172,36 @@ const editarticlename=createLogic({
     }
 })
 
+const deletearticle = createLogic({
+    type: deleteArticleTypes.DELETE_ARTICLE,
+    latest: true,
+    debounce: 1000,
+
+    process({
+        action
+    }, dispatch, done) {
+        let HTTPclient = api
+
+        // debugger
+        console.log("payload check", action.payload)
+        let articleId=action.payload
+
+        HTTPclient.post(endPoints.DELETE_ARTICLE+articleId)
+            .then(resp => {
+                //debugger
+                console.log(resp.data)
+                dispatch(deleteArticleActions.deleteArticleSuccess(resp.data))
+            })
+            .catch(err => {
+                var errormsg = "Failed to delete Article";
+                if (err && err.code === "ECONNABORTED") {
+                    errormsg = "Please check your internet connection.";
+                }
+                dispatch(deleteArticleActions.deleteArticleFail(errormsg))
+            }).then(() => done());
+    }
+})
+
 const gethtml=createLogic({
     type:getHtmlTypes.GET_HTML_TEXT,
     latest:true,
@@ -206,5 +237,6 @@ export default [
     getarticles,
     editarticle,
     gethtml,
-    editarticlename
+    editarticlename,
+    deletearticle
 ]

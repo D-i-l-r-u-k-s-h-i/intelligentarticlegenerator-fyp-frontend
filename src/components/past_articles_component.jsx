@@ -7,6 +7,7 @@ import { downloadArticleActions,getArticleActions,getHtmlActions} from '../actio
 import { saveAs } from 'file-saver';
 import EditArticleModal from './edit_article_modal';
 import EditNameModal from './edit_name_modal';
+import ConfirmDeleteModal from './confirmDeleteModal';
 
 export class PastArticlesComponent extends Component {
     constructor(props){
@@ -19,7 +20,8 @@ export class PastArticlesComponent extends Component {
             htmlData:null,
             itemId:null,
             itemName:null,
-            editNameModalShow:false
+            editNameModalShow:false,
+            confDeleteModalShow:false
         }
     }
 
@@ -71,11 +73,17 @@ export class PastArticlesComponent extends Component {
             itemName:item.articleName,
             editNameModalShow:true
         })
-        
-        //gets html content of article
-        // this.props.getHtmlActions.getHTMLText(item.id)
 
     }
+
+    onDeleteClick=(item)=>{
+        this.setState({
+            itemId:item.id,
+            confDeleteModalShow:true
+        })
+
+    }
+
 
     static getDerivedStateFromProps(nextProps, prevState) {
         // console.log(nextProps)
@@ -130,6 +138,7 @@ export class PastArticlesComponent extends Component {
         let {articlesData}=this.state
         let editModalClose = () => this.setState({ editModalShow: false });
         let editNameModalClose = () => this.setState({ editNameModalShow: false });
+        let confDeleteModalClose= () => this.setState({ confDeleteModalShow: false });
 
         return (
             <div>
@@ -139,9 +148,10 @@ export class PastArticlesComponent extends Component {
                             <tr>
                                 <th>Article Name</th>
                                 <th>File(Last Modified Date)</th>
-                                <th>Edit Article</th>
                                 <th>Download Article</th>
+                                <th>Edit Article</th>
                                 <th>Created Date</th>
+                                <th>Delete</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -153,6 +163,7 @@ export class PastArticlesComponent extends Component {
                                         <td><button type="button" onClick={() => this.onDownloadClick(property)} className="btn btn-success btn-lg">Download</button></td>
                                         <td><button type="button" onClick={() => this.onEditClick(property)} className="btn btn-secondary btn-lg">Edit</button></td>
                                         <td>{property.createdDate}</td>
+                                        <td style={{'text-align': 'right'}}><button type="button" style={{'font-size':'20px'}} onClick={() => this.onDeleteClick(property)} className="btn btn-light btn-sm">&#128465;</button></td>
                                     </tr>
                                 )
                             })}
@@ -160,6 +171,7 @@ export class PastArticlesComponent extends Component {
                     </Table>
                     <EditArticleModal show={this.state.editModalShow} props={this.state} onHide={editModalClose}/>
                     <EditNameModal show={this.state.editNameModalShow} props={this.state} onHide={editNameModalClose}/>
+                    <ConfirmDeleteModal show={this.state.confDeleteModalShow} props={this.state} onHide={confDeleteModalClose}/>
                 </Container>
                 
             </div>
