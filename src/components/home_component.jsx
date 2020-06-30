@@ -27,7 +27,8 @@ export class HomeComponent extends Component {
                 samplesState:'',
                 lengthState:'',
             },
-            required_inputs:false
+            required_inputs:false,
+            submit_sequence:null
         }
     }
 
@@ -97,7 +98,14 @@ export class HomeComponent extends Component {
     }
 
     onSubmitClick=()=>{
-        this.props.getGeneratedArticleActions.getGeneratedArticles(this.state)
+        let obj={
+            submit_sequence:this.props.lmData && this.props.lmData.completed_text,
+            length:this.state.length,
+            temperature:this.state.temperature,
+            samples:this.state.samples
+        }
+        
+        this.props.getGeneratedArticleActions.getGeneratedArticles(obj)
         this.setState({
             loading:true
         })

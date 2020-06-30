@@ -21,7 +21,7 @@ export class EditLmResultModal extends Component {
 
     onSubmitClick=()=>{
         let obj={
-            details:this.state.editedData,
+            submit_sequence:this.state.editedData,
             length:this.props.stateAsProps.length,
             temperature:this.props.stateAsProps.temperature,
             samples:this.props.stateAsProps.samples,

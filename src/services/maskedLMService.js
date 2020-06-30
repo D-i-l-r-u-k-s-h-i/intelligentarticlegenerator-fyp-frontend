@@ -58,7 +58,7 @@ const getGenerated=createLogic({
             length :action.payload.length,
             temperature:action.payload.temperature,
             noOfSamples:action.payload.samples,
-            articleDetails:action.payload.details,
+            articleDetails:action.payload.submit_sequence,
         }
 
         HTTPclient.post(endPoints.GENERATE_ARTICLE,obj)
