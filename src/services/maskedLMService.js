@@ -68,7 +68,7 @@ const getGenerated=createLogic({
                 dispatch(getGeneratedArticleActions.getGeneratedArticlesSuccess(resp.data))
             })
             .catch(err=>{
-                var errormsg="Failed to get masked language modeling result";
+                var errormsg="Failed to get the generated articles";
                 if (err && err.code === "ECONNABORTED") {
                     errormsg = "Please check your internet connection.";
                 }

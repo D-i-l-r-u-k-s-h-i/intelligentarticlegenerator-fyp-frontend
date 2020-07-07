@@ -1,6 +1,6 @@
 export const LOGIN="/auth/login"
 
-export const SIGN_UP="/auth/register"
+export const SIGN_UP="/admin/register"
 
 export const MASKED_LM_RESULT="/article/maskedlm"
 

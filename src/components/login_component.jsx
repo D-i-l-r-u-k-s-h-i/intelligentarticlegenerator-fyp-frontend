@@ -76,8 +76,8 @@ export class LoginComponent extends Component {
                     </Alert>
                     <Button className="btn-lg btn-dark btn-block" onClick={this.handleloginBtnClick} type="submit">Log in</Button>
                     <div className="text-center"><hr/>
-                        <a href="/signup">Sign Up</a>
-                        <span className="p-2">|</span>
+                        {/* <a href="/signup">Sign Up</a>
+                        <span className="p-2">|</span> */}
                         <a href="/forgot-password">Forgot Password</a>
                     </div>
                     </Form>

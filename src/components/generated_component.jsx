@@ -33,7 +33,7 @@ export class GeneratedComponent extends Component {
         let modalClose = () => this.setState({ modalShow: false });
         let editModalClose = () => this.setState({ editModalShow: false });
 
-        console.log(this.props.props.generated_text)
+        // console.log(this.props.props.generated_text)
 
         const next = () => {
             if (animating) return;

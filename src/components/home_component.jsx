@@ -98,6 +98,7 @@ export class HomeComponent extends Component {
     }
 
     onSubmitClick=()=>{
+        this.setState({componentShow:false})
         let obj={
             submit_sequence:this.props.lmData && this.props.lmData.completed_text,
             length:this.state.length,

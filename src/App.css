@@ -27,6 +27,14 @@
  
 }
 
+.center{
+  margin: auto;
+  width: 60%;
+  border: 3px solid #FFFFFF;
+  padding: 10px;
+  text-align: center;
+}
+
 .page-wrap {
   min-height: calc(100vh - 100px);
 }
