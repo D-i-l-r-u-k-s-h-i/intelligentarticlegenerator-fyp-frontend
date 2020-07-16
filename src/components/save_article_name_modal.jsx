@@ -30,9 +30,11 @@ export class SaveArticleNameModal extends Component {
         this.setState({
             visible:true
         })
+
+        console.log(this.props.props)
         
         let obj={
-            articleText:this.props.props.item.caption,
+            articleText:this.props.props.item,
             articlename:this.state.articleName
         }
 

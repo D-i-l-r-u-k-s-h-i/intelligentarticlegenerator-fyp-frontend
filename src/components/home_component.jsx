@@ -53,7 +53,7 @@ export class HomeComponent extends Component {
         this.setState({length:e.target.value})
     }
     handleTemperature=(e)=>{
-        const tempRex = /^(0(\.[0-9]{1,2})?|1(\.0{1,2})?)$/;
+        const tempRex = /^(1(\.[0-8]{1,2})?|1(\.8{1,2})?)$/;
         const { validate } = this.state
           if (tempRex.test(e.target.value)) {
             validate.temperatureState = 'has-success'
@@ -197,10 +197,10 @@ export class HomeComponent extends Component {
                                     <FormGroup>
 
                                         <Label for="temperature">Linguistic Variety</Label>
-                                        <Input onChange={this.handleTemperature} type="number" name="temperature" id="exampletemp" placeholder="Enter a value between 0 & 1" min="0.0" step="0.1" max="1"
+                                        <Input onChange={this.handleTemperature} type="number" name="temperature" id="exampletemp" placeholder="Enter a value between 1 & 1.8" min="1.0" step="0.1" max="1.8"
                                             valid={this.state.validate.temperatureState === 'has-success'} invalid={this.state.validate.temperatureState === 'has-danger'} />
                                         <FormFeedback invalid>
-                                            Please enter only decimals between 0 & 1 up to 2 decimal places
+                                            Please enter only decimals between 1.0 & 1.8 up to 2 decimal places
                                     </FormFeedback>
 
 

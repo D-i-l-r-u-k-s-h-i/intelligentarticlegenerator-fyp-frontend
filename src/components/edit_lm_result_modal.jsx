@@ -44,7 +44,7 @@ export class EditLmResultModal extends Component {
                                 <h2><span className="font-weight-bold">Edit To Give Proper context</span></h2>
                                 <FormGroup>
                                     <Label>Details Check</Label>
-                                    <Input onChange={this.handleTextArea} type="textarea" defaultValue={this.props.props}/>
+                                    <Input onChange={this.handleTextArea} type="textarea" defaultValue={this.props.props} rows="10"/>
                                 </FormGroup>
                                 
                                 <Button onClick={this.onSubmitClick} className="btn-lg btn-dark btn-block" type="button">Submit</Button>
