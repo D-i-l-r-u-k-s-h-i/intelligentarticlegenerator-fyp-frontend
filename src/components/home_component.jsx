@@ -6,7 +6,7 @@ import { lmResultActions,getGeneratedArticleActions } from '../actions'
 import { Container ,Row,Col,Form,FormGroup,Input,Label,Button,Alert,FormFeedback,FormText} from 'reactstrap';
 import {Spinner,OverlayTrigger,Tooltip} from 'react-bootstrap'
 import GeneratedComponent from './generated_component';
-import EditLmResultModal from './edit_lm_result_modal';
+// import EditLmResultModal from './edit_lm_result_modal';
 
 export class HomeComponent extends Component {
     constructor(props){
@@ -15,7 +15,8 @@ export class HomeComponent extends Component {
             visible:false,
             lmData:null,
             length:null,
-            temperature:null,
+            paragraphs:null,
+            // temperature:null,
             samples:null,
             details:null,
             modalShow: false,
@@ -23,12 +24,15 @@ export class HomeComponent extends Component {
             loading:false,
             showSpinner:false,
             validate:{
-                temperatureState:'',
+                // temperatureState:'',
                 samplesState:'',
                 lengthState:'',
+                paragraphState:'',
             },
             required_inputs:false,
-            submit_sequence:null
+            submit_sequence:null,
+            disabled: false,
+            generate_clicked:false
         }
     }
 
@@ -76,18 +80,32 @@ export class HomeComponent extends Component {
         this.setState({ validate })
         this.setState({samples:e.target.value})
     }
+
+    handleParagraphs=(e)=>{
+        const sampleRex =  /^[0-9]+$/;
+        const { validate } = this.state
+          if (sampleRex.test(e.target.value)) {
+            validate.paragraphState = 'has-success'
+          } else {
+            validate.paragraphState = 'has-danger'
+          }
+        this.setState({ validate })
+        this.setState({paragraphs:e.target.value})
+        
+    }
+
     handleTextArea=(e)=>{
         this.setState({details:e.target.value})
         this.checkRequiredInputs()
     }
 
-    onGenerateClick=()=>{
-        this.setState({
-            visible:true,
-            showSpinner:true
-        })
-        this.props.lmResultActions.lmResult(this.state)// pass the text
-    }
+    // onGenerateClick=()=>{
+    //     this.setState({
+    //         visible:true,
+    //         showSpinner:true
+    //     })
+    //     this.props.lmResultActions.lmResult(this.state)// pass the text
+    // }
 
     onDismiss = () =>{
         this.setState({
@@ -97,10 +115,10 @@ export class HomeComponent extends Component {
         // window.location.reload();
     }
 
-    onSubmitClick=()=>{
+    onGenerateClick=()=>{
         this.setState({componentShow:false})
         let obj={
-            submit_sequence:this.props.lmData && this.props.lmData.completed_text,
+            submit_sequence:this.state.details,
             length:this.state.length,
             temperature:this.state.temperature,
             samples:this.state.samples
@@ -108,7 +126,9 @@ export class HomeComponent extends Component {
         
         this.props.getGeneratedArticleActions.getGeneratedArticles(obj)
         this.setState({
-            loading:true
+            loading:true,
+            disabled: !this.state.disabled,
+            generate_clicked:true
         })
     }
 
@@ -118,14 +138,16 @@ export class HomeComponent extends Component {
             this.setState({
                 loading:false,
                 componentShow :true,
+                disabled: false,
+                generate_clicked:false
             })
         }
         
-        if(this.props.lmData != prevProps.lmData){
-            this.setState({
-                showSpinner:false
-            })
-        }
+        // if(this.props.lmData != prevProps.lmData){
+        //     this.setState({
+        //         showSpinner:false
+        //     })
+        // }
 
         if(prevState.details != this.state.details && this.state.details==""){
             this.setState({
@@ -134,18 +156,18 @@ export class HomeComponent extends Component {
         }
         
     }
-    renderTooltip=(props)=> {
-        return (
-          <Tooltip id="button-tooltip" {...props}>
-            Linguistic variety- controls the diversity/randomness of word predictions generated. High value entered will give more surprising text while low values will give more accurate and predictable text.
-          </Tooltip>
-        );
-      }
+    // renderTooltip=(props)=> {
+    //     return (
+    //       <Tooltip id="button-tooltip" {...props}>
+    //         Linguistic variety- controls the diversity/randomness of word predictions generated. High value entered will give more surprising text while low values will give more accurate and predictable text.
+    //       </Tooltip>
+    //     );
+    //   }
 
     render() {
 
-        let modalClose = () => this.setState({ modalShow: false });
-        let showSpinner=()=>this.setState({loading:true});
+        // let modalClose = () => this.setState({ modalShow: false });
+        // let showSpinner=()=>this.setState({loading:true});
 
         console.log(this.props.generatedData)
         
@@ -157,12 +179,13 @@ export class HomeComponent extends Component {
                             <Col>
                                 <FormGroup>
                                     <Label for="exampleText">Enter Article Details</Label>
-                                    <Input onChange={this.handleTextArea} type="textarea" name="text" id="exampleText" rows="5"/>
+                                    <Input onChange={this.handleTextArea} type="textarea" name="text" id="exampleText" rows="10" disabled = {(this.state.disabled)? "disabled" : ""}/>
                                 </FormGroup>
                                 {this.state.required_inputs ? null : <FormText className='text-white'>Add in the details to start generating the article.</FormText>}<br />
     
-                                {this.state.required_inputs ? <Button onClick={this.onGenerateClick}>Generate</Button>:<Button onClick={this.onGenerateClick} disabled>Generate</Button>}<br/><br/>
-                                <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
+                                {this.state.required_inputs && this.state.generate_clicked? <div><Button onClick={this.onGenerateClick} disabled>Generate</Button><button type="button" className='btn btn-outline-secondary ml-3' onClick={this.onCancelClick}>Cancel</button></div>:this.state.required_inputs?<Button onClick={this.onGenerateClick}>Generate</Button>:<Button onClick={this.onGenerateClick} disabled>Generate</Button>}<br/><br/>
+                                {/* {this.state.generate_clicked ?<div><Button onClick={this.onGenerateClick}>Generate</Button><button type="button" className='btn btn-outline-secondary ml-3' onClick={this.onCancelClick}>Cancel</button></div>:} */}
+                                {/* <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
                                     {this.state.showSpinner?<Spinner animation="border" />:null}
                                     {this.props.lmData && this.props.lmData.completed_text}
                                     <hr/>
@@ -170,26 +193,26 @@ export class HomeComponent extends Component {
                                     <button type="button" onClick={() => this.setState({ modalShow: true })} class="btn btn-secondary btn-sm float-right">Edit</button>
                                     <button type="button" onClick={this.onSubmitClick} class="btn btn-info btn-sm mr-2 float-right">Submit</button>
                                     <hr/>
-                                </Alert>
+                                </Alert> */}
                             </Col>
                             <Col>
                                 <FormGroup>
-                                    <Label for="length">Length</Label>
-                                    <Input onChange={this.handleLength} type="number" name="length" id="examplelength" placeholder="Enter the word count" min="0"
-                                    valid={this.state.validate.lengthState === 'has-success'} invalid={this.state.validate.lengthState === 'has-danger'}/>
+                                    <Label for="length">No. of words per sample</Label>
+                                    <Input onChange={this.handleLength} type="number" name="length" id="examplelength" placeholder="Enter the word count" min="0" max="2000"
+                                    valid={this.state.validate.lengthState === 'has-success'} invalid={this.state.validate.lengthState === 'has-danger'} disabled = {(this.state.disabled)? "disabled" : ""}/>
                                     <FormFeedback invalid>
-                                        Please enter a positive whole number
+                                        Please enter a positive whole number less than or equal to 2000
                                     </FormFeedback>
                                 </FormGroup>
                                 <FormGroup>
                                     <Label for="samples">No. of samples</Label>
                                     <Input onChange={this.handleSamples} type="number" name="samples" id="examplesamples" placeholder="Enter no. of samples to be generated" min="1"
-                                    valid={this.state.validate.samplesState === 'has-success'} invalid={this.state.validate.samplesState === 'has-danger'}/>
+                                    valid={this.state.validate.samplesState === 'has-success'} invalid={this.state.validate.samplesState === 'has-danger'}disabled = {(this.state.disabled)? "disabled" : ""}/>
                                     <FormFeedback invalid>
-                                        Please enter a positive whole number
+                                        Please enter a positive whole number less than 6
                                     </FormFeedback>
                                 </FormGroup>
-                                <OverlayTrigger
+                                {/* <OverlayTrigger
                                     placement="bottom"
                                     delay={{ show: 250, hide: 400 }}
                                     overlay={this.renderTooltip}
@@ -205,14 +228,25 @@ export class HomeComponent extends Component {
 
 
                                     </FormGroup>
-                                </OverlayTrigger>
+                                </OverlayTrigger> */}
+                                <FormGroup>
+
+                                    <Label for="paragraphs">No. of Paragraphs</Label>
+                                    <Input onChange={this.handleParagraphs} type="number" name="paragraphs" id="examplepara" placeholder="Enter No. of samples" min="1" step="1" max="10"
+                                        valid={this.state.validate.paragraphState === 'has-success'} invalid={this.state.validate.paragraphState === 'has-danger'} disabled = {(this.state.disabled)? "disabled" : ""}/>
+                                    <FormFeedback invalid>
+                                        Please enter a positive whole number less than 10
+                                    </FormFeedback>
+
+
+                                </FormGroup>
                             </Col>
                         </Row>
                     </Form>
                     <hr/><br/><br/><br/>
                     {this.state.loading?<div className="text-center"><br/><Spinner animation="border" /><br/><br/><br/></div>:null}
-                    {this.state.componentShow ?<GeneratedComponent props={this.props.generatedData && this.props.generatedData}/>:null}
-                    <EditLmResultModal show={this.state.modalShow} props={this.props.lmData && this.props.lmData.completed_text} stateAsProps={this.state} onHide={modalClose} onSubmitClickk={showSpinner}/>
+                    {this.state.componentShow ?<GeneratedComponent props={this.props.generatedData && this.props.generatedData} details= {this.state.details}/>:null}
+                    {/* <EditLmResultModal show={this.state.modalShow} props={this.props.lmData && this.props.lmData.completed_text} stateAsProps={this.state} onHide={modalClose} onSubmitClickk={showSpinner}/> */}
                 </Container>
             </div>
         )
@@ -221,7 +255,7 @@ export class HomeComponent extends Component {
 
 function mapDispatchToProps (dispatch){
     return{
-        lmResultActions: bindActionCreators(lmResultActions,dispatch),
+        // lmResultActions: bindActionCreators(lmResultActions,dispatch),
         getGeneratedArticleActions: bindActionCreators(getGeneratedArticleActions,dispatch)
     }
 }

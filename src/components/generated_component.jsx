@@ -8,6 +8,7 @@ import {Container ,Row,Col} from 'react-bootstrap'
 import { saveAs } from 'file-saver';
 import SaveArticleNameModal from './save_article_name_modal';
 import EditArticleModal from './edit_article_modal';
+import Highlighter from "react-highlight-words";
 
 export class GeneratedComponent extends Component {
     constructor(props){
@@ -64,7 +65,12 @@ export class GeneratedComponent extends Component {
             // setActiveIndex(newIndex);
           }
 
-        
+        //   const highlightValues=()=>{
+        //       console.log(this.props.details && this.props.details.match(/\b(\w+)\b/g))
+        //       return this.props.details && this.props.details.match(/\b(\w+)\b/g)
+        //   }
+
+        console.log(this.props.details)
           const slides = items.map((item,index) => {
             console.log(item.id)
             return (
@@ -76,7 +82,13 @@ export class GeneratedComponent extends Component {
                     key={index}
 
                 >
-                    <CarouselCaption captionText={<div className="ex1">Sample No. {index+1} <br/><br/><br/> {item}</div>}/>
+                    
+                    <CarouselCaption captionText={<div className="ex1">Sample No. {index+1} <br/><br/><br/> <Highlighter
+                        highlightClassName="YourHighlightClass"
+                        searchWords={this.props.details && this.props.details.match(/\b(\w+)\b/g)}
+                        autoEscape={true}
+                        textToHighlight={this.state.item}
+                    /></div>}/>
                     
                     {/* <img src={item.src} alt={item.altText} /> */}
                     {/* <CarouselCaption captionText={<div class="ex2">{item}</div>}/> */}

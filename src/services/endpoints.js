@@ -6,7 +6,7 @@ export const MASKED_LM_RESULT="/article/maskedlm"
 
 export const SAVE_ARTICLE="/article/save"
 
-export const GENERATE_ARTICLE="/article/generate"
+export const GENERATE_ARTICLE="/article/combined"
 
 export const EDIT_ARTICLE="/article/edit"
 
