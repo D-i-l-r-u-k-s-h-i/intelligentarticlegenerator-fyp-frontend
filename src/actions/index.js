@@ -9,9 +9,15 @@ import * as GetGeneratedArticles from './getGeneratedArticles'
 import * as SignUp from './signup'
 import * as EditName from './editName'
 import * as DeleteArticle from './deleteArticle'
+import * as CancelRequest from './cancelRequest'
+import * as SearchArticle from './searchArticle'
 
 export{
     Login as loginTypes
+}
+
+export{
+    CancelRequest as CancelRequestTypes
 }
 
 export{
@@ -20,6 +26,10 @@ export{
 
 export{
     SaveArticle as saveArticleTypes
+}
+
+export{
+    SearchArticle as searchArticleTypes
 }
 
 export{
@@ -56,9 +66,13 @@ export{
 
 export const loginActions=Login.default;
 
+export const cancelRequestActions=CancelRequest.default;
+
 export const lmResultActions=GetLMResult.default;
 
 export const saveArticleActions=SaveArticle.default;
+
+export const searchArticleActions=SearchArticle.default;
 
 export const downloadArticleActions=DownloadArticle.default;
 

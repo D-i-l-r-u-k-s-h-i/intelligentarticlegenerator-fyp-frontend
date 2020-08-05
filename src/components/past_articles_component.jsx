@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
-import { Table ,Container} from 'reactstrap';
+import { Table ,Container,Col,
+    Row,
+    Input,
+    InputGroup,InputGroupAddon,Button} from 'reactstrap';
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter} from 'react-router-dom'
-import { downloadArticleActions,getArticleActions,getHtmlActions} from '../actions'
+import { downloadArticleActions,getArticleActions,getHtmlActions,searchArticleActions} from '../actions'
 import { saveAs } from 'file-saver';
 import EditArticleModal from './edit_article_modal';
 import EditNameModal from './edit_name_modal';
@@ -21,7 +24,8 @@ export class PastArticlesComponent extends Component {
             itemId:null,
             itemName:null,
             editNameModalShow:false,
-            confDeleteModalShow:false
+            confDeleteModalShow:false,
+            searchString:null
         }
     }
 
@@ -84,6 +88,13 @@ export class PastArticlesComponent extends Component {
 
     }
 
+    handleSearchChange=(e)=>{
+        this.setState({searchString:e.target.value})
+    }
+
+    onSearchClick=()=>{
+        this.props.searchArticleActions.searchArticle(this.state.searchString)
+    }
 
     static getDerivedStateFromProps(nextProps, prevState) {
         // console.log(nextProps)
@@ -143,6 +154,20 @@ export class PastArticlesComponent extends Component {
         return (
             <div>
                 <Container>
+                <Row className="search">
+                    <Col sm="12">
+                        <InputGroup>
+                            <Input onChange={this.handleSearchChange} placeholder="Search..."/>
+                            <InputGroupAddon addonType="prepend">
+                                <Button onClick={this.onSearchClick} color="success" 
+                                        className="search-button">
+                                    Search
+                                </Button>
+                            </InputGroupAddon>
+                        </InputGroup>
+                    </Col>
+                </Row>
+                <br/>
                     <Table hover>
                         <thead>
                             <tr>
@@ -184,6 +209,7 @@ function mapDispatchToProps (dispatch){
         downloadArticleActions: bindActionCreators(downloadArticleActions,dispatch),
         getArticleActions:bindActionCreators(getArticleActions,dispatch),
         getHtmlActions:bindActionCreators(getHtmlActions,dispatch),
+        searchArticleActions:bindActionCreators(searchArticleActions,dispatch),        
     }
 }
 

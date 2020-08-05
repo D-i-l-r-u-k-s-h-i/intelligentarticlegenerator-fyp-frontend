@@ -1,6 +1,6 @@
 import {createLogic} from 'redux-logic'
 
-import {lmResultTypes,lmResultActions,getGeneratedArticleActions,getGeneratedArticleTypes} from "../actions"
+import {lmResultTypes,lmResultActions,getGeneratedArticleActions,getGeneratedArticleTypes,cancelRequestActions,CancelRequestTypes} from "../actions"
 
 import * as endPoints from './endpoints'
 import * as api from './HTTPclient'
@@ -77,7 +77,37 @@ const getGenerated=createLogic({
     }
 })
 
+const cancelrequest=createLogic({
+    type:CancelRequestTypes.CANCEL_REQUEST,
+    latest:true,
+    debounce:1000,
+
+    process({
+        action
+    },dispatch,done){
+        let HTTPclient=api
+
+        // debugger
+        console.log("payload check",action.payload)
+
+        HTTPclient.post(endPoints.CANCEL_REQUEST)
+            .then(resp=> {
+                // debugger
+                console.log(resp.data)
+                dispatch(cancelRequestActions.cancelRequestSuccess(resp.data))
+            })
+            .catch(err=>{
+                var errormsg="Failed to cancel request";
+                if (err && err.code === "ECONNABORTED") {
+                    errormsg = "Please check your internet connection.";
+                }
+                dispatch(cancelRequestActions.cancelRequestFail(errormsg))
+            }).then(()=>done());
+    }
+})
+
 export default [
     maskedlm,
-    getGenerated
+    getGenerated,
+    cancelrequest
 ]

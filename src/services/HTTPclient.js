@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { loadProgressBar } from 'axios-progress-bar'
 
 // const id_token="JWTSuperSecretKey";
 
@@ -6,6 +7,7 @@ import axios from 'axios'
 axios.defaults.headers.get["Content-Type"] = 'application/json'
 
 var instance = null;
+// const progressBarConfig = {speed: 500,trickleRate: 0.02, trickleSpeed: 800}; //, showSpinner: false 
 
 export const setAuth = () => {
     if(localStorage.jwt==undefined){
@@ -47,6 +49,7 @@ export const setAuth = () => {
             }
         }
         )
+        loadProgressBar(null,instance)
         instance.interceptors.response.use(function (response) {
             return response;
         }, function (error) {

@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter} from 'react-router-dom'
-import { lmResultActions,getGeneratedArticleActions } from '../actions'
-import { Container ,Row,Col,Form,FormGroup,Input,Label,Button,Alert,FormFeedback,FormText} from 'reactstrap';
-import {Spinner,OverlayTrigger,Tooltip} from 'react-bootstrap'
+import { cancelRequestActions,getGeneratedArticleActions } from '../actions'
+import { Container ,Row,Col,Form,FormGroup,Input,Label,Button,FormFeedback,FormText} from 'reactstrap';
+import {Spinner} from 'react-bootstrap'
 import GeneratedComponent from './generated_component';
-// import EditLmResultModal from './edit_lm_result_modal';
+// import EditLmResultModal from './edit_lm_result_modal';'
 
 export class HomeComponent extends Component {
     constructor(props){
@@ -99,13 +99,14 @@ export class HomeComponent extends Component {
         this.checkRequiredInputs()
     }
 
-    // onGenerateClick=()=>{
-    //     this.setState({
-    //         visible:true,
-    //         showSpinner:true
-    //     })
-    //     this.props.lmResultActions.lmResult(this.state)// pass the text
-    // }
+    onCancelClick=()=>{
+        this.setState({
+            disabled: false,
+            generate_clicked:false,
+            loading:false
+        })
+        this.props.cancelRequestActions.cancelRequest(this.state)
+    }
 
     onDismiss = () =>{
         this.setState({
@@ -168,7 +169,7 @@ export class HomeComponent extends Component {
 
         // let modalClose = () => this.setState({ modalShow: false });
         // let showSpinner=()=>this.setState({loading:true});
-
+        // loadProgressBar()
         console.log(this.props.generatedData)
         
         return (
@@ -184,7 +185,7 @@ export class HomeComponent extends Component {
                                 {this.state.required_inputs ? null : <FormText className='text-white'>Add in the details to start generating the article.</FormText>}<br />
     
                                 {this.state.required_inputs && this.state.generate_clicked? <div><Button onClick={this.onGenerateClick} disabled>Generate</Button><button type="button" className='btn btn-outline-secondary ml-3' onClick={this.onCancelClick}>Cancel</button></div>:this.state.required_inputs?<Button onClick={this.onGenerateClick}>Generate</Button>:<Button onClick={this.onGenerateClick} disabled>Generate</Button>}<br/><br/>
-                                {/* {this.state.generate_clicked ?<div><Button onClick={this.onGenerateClick}>Generate</Button><button type="button" className='btn btn-outline-secondary ml-3' onClick={this.onCancelClick}>Cancel</button></div>:} */}
+                                
                                 {/* <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
                                     {this.state.showSpinner?<Spinner animation="border" />:null}
                                     {this.props.lmData && this.props.lmData.completed_text}
@@ -245,7 +246,7 @@ export class HomeComponent extends Component {
                     </Form>
                     <hr/><br/><br/><br/>
                     {this.state.loading?<div className="text-center"><br/><Spinner animation="border" /><br/><br/><br/></div>:null}
-                    {this.state.componentShow ?<GeneratedComponent props={this.props.generatedData && this.props.generatedData} details= {this.state.details}/>:null}
+                    {this.props.generatedData && Array.isArray(this.props.generatedData.generated_text) && this.state.componentShow ?<GeneratedComponent props={this.props.generatedData && this.props.generatedData} details= {this.state.details}/>:null}
                     {/* <EditLmResultModal show={this.state.modalShow} props={this.props.lmData && this.props.lmData.completed_text} stateAsProps={this.state} onHide={modalClose} onSubmitClickk={showSpinner}/> */}
                 </Container>
             </div>
@@ -255,7 +256,7 @@ export class HomeComponent extends Component {
 
 function mapDispatchToProps (dispatch){
     return{
-        // lmResultActions: bindActionCreators(lmResultActions,dispatch),
+        cancelRequestActions: bindActionCreators(cancelRequestActions,dispatch),
         getGeneratedArticleActions: bindActionCreators(getGeneratedArticleActions,dispatch)
     }
 }

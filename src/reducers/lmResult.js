@@ -1,4 +1,4 @@
-import {lmResultTypes,getGeneratedArticleTypes} from '../actions'
+import {lmResultTypes,getGeneratedArticleTypes,CancelRequestTypes} from '../actions'
 
 import {handleActions} from "redux-actions"
 
@@ -24,6 +24,15 @@ export default handleActions({
         ...state,loading:false,generatedData:payload
     }),
     [getGeneratedArticleTypes.FAIL_GET_GENERATED_ARTICLES]:(state,{payload})=>({
+        ...state,loading:false,generatedData:null
+    }),
+    [CancelRequestTypes.CANCEL_REQUEST]:(state,{payload})=>({
+        ...state,loading:true
+    }),
+    [CancelRequestTypes.SUCCESS_CANCEL_REQUEST]:(state,{payload})=>({
+        ...state,loading:false,generatedData:payload
+    }),
+    [CancelRequestTypes.FAIL_CANCEL_REQUEST]:(state,{payload})=>({
         ...state,loading:false,generatedData:null
     }),
 },initialState)

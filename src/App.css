@@ -102,3 +102,17 @@
   padding: 40px;
   background-color: #FFFFFF;
 }
+
+#nprogress .bar {
+  background: #F8CE14 !important;
+  height: px;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #F8CE14, 0 0 5px #F8CE14 !important;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: #F8CE14 !important;
+  border-left-color: #F8CE14 !important;
+}
