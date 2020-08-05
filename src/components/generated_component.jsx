@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import SaveArticleNameModal from './save_article_name_modal';
 import EditArticleModal from './edit_article_modal';
 import Highlighter from "react-highlight-words";
+import { Packer, Document, Paragraph, HeadingLevel } from "docx";
 
 export class GeneratedComponent extends Component {
     constructor(props){
@@ -27,6 +28,24 @@ export class GeneratedComponent extends Component {
     onDownloadClick=()=>{
         var blob = new Blob([this.state.item], { type: "text/pdf" });
         saveAs(blob, `Article${Date()}`)
+    }
+
+    onImportClick=()=>{
+        const document = new Document();
+
+        document.addSection({
+            children: [
+                new Paragraph({
+                    text:this.state.item,
+                    // heading: HeadingLevel.TITLE,
+                }),]
+        })
+
+        Packer.toBlob(document).then(blob => {
+            // console.log(blob);
+            saveAs(blob, `Exported-Article${Date()}.docx`);
+            // console.log("Document created successfully");
+        });
     }
 
     render() {
@@ -135,6 +154,7 @@ export class GeneratedComponent extends Component {
                         </Col>
                         <Col>
                             <button type="button" onClick={this.onDownloadClick} className="btn btn-primary btn-lg">Download</button><br/><br/>
+                            <button type="button" onClick={this.onImportClick} className="btn btn-info btn p-2.5">Import As Docx</button><br/><br/>
                             <button type="button" onClick={() => this.setState({ editModalShow: true })} className="btn btn-secondary btn-lg">Edit</button><br/><br/>
                             <button type="button" onClick={() => this.setState({ modalShow: true })} className="btn btn-warning btn-lg">Save</button><br /><br />
                             
