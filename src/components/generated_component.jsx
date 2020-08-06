@@ -9,7 +9,8 @@ import { saveAs } from 'file-saver';
 import SaveArticleNameModal from './save_article_name_modal';
 import EditArticleModal from './edit_article_modal';
 import Highlighter from "react-highlight-words";
-import { Packer, Document, Paragraph, HeadingLevel } from "docx";
+import { Packer, Document, Paragraph} from "docx";
+const parBuild = require("paragraph-builder");
 
 export class GeneratedComponent extends Component {
     constructor(props){
@@ -84,14 +85,11 @@ export class GeneratedComponent extends Component {
             // setActiveIndex(newIndex);
           }
 
-        //   const highlightValues=()=>{
-        //       console.log(this.props.details && this.props.details.match(/\b(\w+)\b/g))
-        //       return this.props.details && this.props.details.match(/\b(\w+)\b/g)
-        //   }
-
         console.log(this.props.details)
-          const slides = items.map((item,index) => {
-            console.log(item.id)
+        const slides = items.map((item, index) => {
+            var resultText = parBuild.toArray(item,400);
+            // console.log(resultText)
+            // console.log(item.id)
             return (
                 <CarouselItem
                     onExiting={() => this.setState({ animating: false })}
@@ -101,19 +99,24 @@ export class GeneratedComponent extends Component {
                     key={index}
 
                 >
-                    
-                    <CarouselCaption captionText={<div className="ex1">Sample No. {index+1} <br/><br/><br/> <Highlighter
-                        highlightClassName="YourHighlightClass"
-                        searchWords={this.props.details && this.props.details.match(/\b(\w+)\b/g)}
-                        autoEscape={true}
-                        textToHighlight={this.state.item}
-                    /></div>}/>
-                    
+
+                    <CarouselCaption captionText={<div className="ex1">Sample No. {index + 1} <br /><br /><br /> {resultText.map((itemm, indexx) => {
+                        return (
+                            <div><Highlighter
+                                highlightClassName="YourHighlightClass"
+                                searchWords={this.props.details && this.props.details.match(/\b(\w+)\b/g)}
+                                autoEscape={true}
+                                textToHighlight={itemm}
+                                className="ex2"
+                            /><br/><br/></div>
+                        )
+                    })}</div>} />
+
                     {/* <img src={item.src} alt={item.altText} /> */}
                     {/* <CarouselCaption captionText={<div class="ex2">{item}</div>}/> */}
                 </CarouselItem>
             );
-          });
+        });
 
         return (
             <div>

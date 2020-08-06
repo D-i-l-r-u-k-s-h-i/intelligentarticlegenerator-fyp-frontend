@@ -41,7 +41,7 @@ export const setAuth = () => {
         // debugger
         instance = axios.create({
             baseURL: '',
-            timeout: 120000,
+            timeout: 12000000,
     
             headers: {
                 'Authorization': 'Bearer ' + localStorage.jwt,
