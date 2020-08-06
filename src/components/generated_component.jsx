@@ -27,19 +27,33 @@ export class GeneratedComponent extends Component {
     }
 
     onDownloadClick=()=>{
-        var blob = new Blob([this.state.item], { type: "text/pdf" });
+        var resultText = parBuild.toArray(this.state.item && this.state.item, 400);
+        // console.log(resultText)
+        var paras = resultText.join("\n\n")
+        // console.log(paras)
+        var blob = new Blob([paras], { type: "text/pdf" });
         saveAs(blob, `Article${Date()}`)
     }
 
     onImportClick=()=>{
         const document = new Document();
 
-        document.addSection({
-            children: [
+        var resultText = parBuild.toArray(this.state.item && this.state.item, 400); 
+        // var paras = resultText.join('\n\n')  
+        
+        var paragraphs=[]
+
+        resultText.map((itemm, indexx) => {
+            paragraphs.push(
                 new Paragraph({
-                    text:this.state.item,
+                    text: itemm,
                     // heading: HeadingLevel.TITLE,
-                }),]
+                })
+            )
+        })
+
+        document.addSection({
+            children: paragraphs
         })
 
         Packer.toBlob(document).then(blob => {
@@ -85,10 +99,10 @@ export class GeneratedComponent extends Component {
             // setActiveIndex(newIndex);
           }
 
-        console.log(this.props.details)
+        // console.log(this.props.details)
         const slides = items.map((item, index) => {
             var resultText = parBuild.toArray(item,400);
-            // console.log(resultText)
+            console.log(resultText)
             // console.log(item.id)
             return (
                 <CarouselItem
@@ -106,7 +120,7 @@ export class GeneratedComponent extends Component {
                                 highlightClassName="YourHighlightClass"
                                 searchWords={this.props.details && this.props.details.match(/\b(\w+)\b/g)}
                                 autoEscape={true}
-                                textToHighlight={itemm}
+                                textToHighlight={itemm == ""?item:itemm}
                                 className="ex2"
                             /><br/><br/></div>
                         )

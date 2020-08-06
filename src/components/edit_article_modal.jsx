@@ -134,39 +134,42 @@ export class EditArticleModal extends Component {
         console.log(this.props)
 
         return (
-            <div>
-                <Modal {...this.props} animation={false}>
-                
-                    <Modal.Body>
-                        <Editor
-                            initialValue={`<p>${this.props.props.item !=undefined? this.props.props.item:this.props.htmlData}</p>`}
-                            init={{
-                                height: 500,
-                                menubar: false,
-                                plugins: [
-                                    'advlist autolink lists link image charmap print preview anchor',
-                                    'searchreplace visualblocks code fullscreen',
-                                    'insertdatetime media table paste code help wordcount'
-                                ],
-                                toolbar:
-                                    'undo redo | formatselect | bold italic backcolor | \
+          <div>
+            <Modal {...this.props} animation={false} size="lg"
+              aria-labelledby="contained-modal-title-vcenter"
+              centered>
+
+              <Modal.Body>
+                <Editor
+                  initialValue={`<p>${this.props.props.item != undefined ? this.props.props.item : this.props.htmlData}</p>`}
+                  init={{
+                    height: 750,
+                    width: 760,
+                    menubar: false,
+                    plugins: [
+                      'advlist autolink lists link image charmap print preview anchor',
+                      'searchreplace visualblocks code fullscreen',
+                      'insertdatetime media table paste code help wordcount'
+                    ],
+                    toolbar:
+                      'undo redo | formatselect | bold italic backcolor | \
                                     alignleft aligncenter alignright alignjustify | \
                                     bullist numlist outdent indent | removeformat | help'
-                            }}
-                            onEditorChange={this.handleEditorChange}
-                        />
+                  }}
+                  onEditorChange={this.handleEditorChange}
+                />
 
-                        <Button onClick={this.onSaveClick} className="btn-lg btn-dark btn-block" type="button">Save</Button>
-                        <OverlayTrigger trigger="click" placement="right" overlay={popover}>
-                            <Button className="btn-lg btn-dark btn-block" variant="success">Share</Button>
-                        </OverlayTrigger>
+                <Button onClick={this.onSaveClick} className="btn-lg btn-dark btn-block" type="button">Save</Button>
+                <OverlayTrigger trigger="click" placement="right" overlay={popover}>
+                  <Button className="btn-lg btn-dark btn-block" variant="success">Share</Button>
+                </OverlayTrigger>
 
-                        <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
-                            {this.props.articleData && this.props.articleData}
-                        </Alert>
-                    </Modal.Body>
-                </Modal>
-            </div>
+                <Alert color="info" isOpen={this.state.visible} toggle={this.onDismiss}>
+                  {this.props.articleData && this.props.articleData}
+                </Alert>
+              </Modal.Body>
+            </Modal>
+          </div>
         )
     }
 }

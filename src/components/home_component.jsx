@@ -27,7 +27,7 @@ export class HomeComponent extends Component {
                 // temperatureState:'',
                 samplesState:'',
                 lengthState:'',
-                paragraphState:'',
+                // paragraphState:'',
             },
             required_inputs:false,
             submit_sequence:null,
@@ -39,14 +39,14 @@ export class HomeComponent extends Component {
     checkRequiredInputs=()=>{
         const {details,validate}=this.state
 
-        if(details!=null && validate.samplesState!='has-danger' && validate.temperatureState!='has-danger' && validate.lengthState!='has-danger'){
+        if(details!=null && validate.samplesState!='has-danger' && validate.lengthState!='has-danger'){
             this.setState({required_inputs:true})
             return true
         }
     }
 
     handleLength=(e)=>{
-        const lengthRex =  /^[0-9]+$/;
+        const lengthRex =  /^([1-9][0-9]{0,2}|1000)$/;
         const { validate } = this.state
           if (lengthRex.test(e.target.value)) {
             validate.lengthState = 'has-success'
@@ -56,21 +56,21 @@ export class HomeComponent extends Component {
         this.setState({ validate })
         this.setState({length:e.target.value})
     }
-    handleTemperature=(e)=>{
-        const tempRex = /^(1(\.[0-8]{1,2})?|1(\.8{1,2})?)$/;
-        const { validate } = this.state
-          if (tempRex.test(e.target.value)) {
-            validate.temperatureState = 'has-success'
-          } else {
-            validate.temperatureState = 'has-danger'
-          }
-        this.setState({ validate })
+    // handleTemperature=(e)=>{
+    //     const tempRex = /^(1(\.[0-8]{1,2})?|1(\.8{1,2})?)$/;
+    //     const { validate } = this.state
+    //       if (tempRex.test(e.target.value)) {
+    //         validate.temperatureState = 'has-success'
+    //       } else {
+    //         validate.temperatureState = 'has-danger'
+    //       }
+    //     this.setState({ validate })
 
-        this.setState({temperature:e.target.value})
-    }
+    //     this.setState({temperature:e.target.value})
+    // }
     
     handleSamples=(e)=>{
-        const sampleRex =  /^[0-9]+$/;
+        const sampleRex =  /^0*([1-5])$/;
         const { validate } = this.state
           if (sampleRex.test(e.target.value)) {
             validate.samplesState = 'has-success'
@@ -81,18 +81,18 @@ export class HomeComponent extends Component {
         this.setState({samples:e.target.value})
     }
 
-    handleParagraphs=(e)=>{
-        const sampleRex =  /^[0-9]+$/;
-        const { validate } = this.state
-          if (sampleRex.test(e.target.value)) {
-            validate.paragraphState = 'has-success'
-          } else {
-            validate.paragraphState = 'has-danger'
-          }
-        this.setState({ validate })
-        this.setState({paragraphs:e.target.value})
+    // handleParagraphs=(e)=>{
+    //     const sampleRex =  /^[0-9]+$/;
+    //     const { validate } = this.state
+    //       if (sampleRex.test(e.target.value)) {
+    //         validate.paragraphState = 'has-success'
+    //       } else {
+    //         validate.paragraphState = 'has-danger'
+    //       }
+    //     this.setState({ validate })
+    //     this.setState({paragraphs:e.target.value})
         
-    }
+    // }
 
     handleTextArea=(e)=>{
         this.setState({details:e.target.value})
@@ -108,13 +108,13 @@ export class HomeComponent extends Component {
         this.props.cancelRequestActions.cancelRequest(this.state)
     }
 
-    onDismiss = () =>{
-        this.setState({
-            visible:false,
-            showSpinner:false
-        })
-        // window.location.reload();
-    }
+    // onDismiss = () =>{
+    //     this.setState({
+    //         visible:false,
+    //         showSpinner:false
+    //     })
+    //     // window.location.reload();
+    // }
 
     onGenerateClick=()=>{
         this.setState({componentShow:false})
@@ -230,7 +230,7 @@ export class HomeComponent extends Component {
 
                                     </FormGroup>
                                 </OverlayTrigger> */}
-                                <FormGroup>
+                                {/* <FormGroup>
 
                                     <Label for="paragraphs">No. of Paragraphs</Label>
                                     <Input onChange={this.handleParagraphs} type="number" name="paragraphs" id="examplepara" placeholder="Enter No. of samples" min="1" step="1" max="10"
@@ -240,7 +240,7 @@ export class HomeComponent extends Component {
                                     </FormFeedback>
 
 
-                                </FormGroup>
+                                </FormGroup> */}
                             </Col>
                         </Row>
                     </Form>
