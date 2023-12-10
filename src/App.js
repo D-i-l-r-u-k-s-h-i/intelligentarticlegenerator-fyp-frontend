@@ -7,6 +7,7 @@ import HomePage from './modules/homepage';
 import PasrArticlesPage from './modules/past_articlespage';
 import SignupPage from './modules/signup_page';
 import AdminPage from './modules/adminpage';
+import 'axios-progress-bar/dist/nprogress.css'
 
 function App() {
   return (

@@ -1,4 +1,4 @@
-import {saveArticleTypes,downloadArticleTypes,getArticleTypes,editArticleTypes,getHtmlTypes,editNameTypes,deleteArticleTypes} from '../actions'
+import {saveArticleTypes,downloadArticleTypes,getArticleTypes,editArticleTypes,getHtmlTypes,editNameTypes,deleteArticleTypes,searchArticleTypes} from '../actions'
 
 import {handleActions} from "redux-actions"
 
@@ -44,6 +44,15 @@ export default handleActions({
         ...state,loading:false,articlesData:payload
     }),
     [getArticleTypes.FAIL_GET_ARTICLES]:(state,{payload})=>({
+        ...state,loading:false,articlesData:null
+    }),
+    [searchArticleTypes.SEARCH_ARTICLE]:(state,{payload})=>({
+        ...state,loading:true
+    }),
+    [searchArticleTypes.SUCCESS_SEARCH_ARTICLE]:(state,{payload})=>({
+        ...state,loading:false,articlesData:payload
+    }),
+    [searchArticleTypes.FAIL_SEARCH_ARTICLE]:(state,{payload})=>({
         ...state,loading:false,articlesData:null
     }),
     [getHtmlTypes.GET_HTML_TEXT]:(state,{payload})=>({

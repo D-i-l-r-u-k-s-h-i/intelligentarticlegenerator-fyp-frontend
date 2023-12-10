@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { withRouter} from 'react-router-dom'
 import { saveArticleActions} from '../actions'
+const parBuild = require("paragraph-builder");
 
 export class SaveArticleNameModal extends Component {
     constructor(props){
@@ -31,10 +32,13 @@ export class SaveArticleNameModal extends Component {
             visible:true
         })
 
-        console.log(this.props.props)
+        // console.log(this.props.props)
+        var resultText = parBuild.toArray(this.props.props.item, 400);
+        // console.log(resultText)
+        var paras = resultText.join("\n\n")
         
         let obj={
-            articleText:this.props.props.item,
+            articleText:paras,
             articlename:this.state.articleName
         }
 

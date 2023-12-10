@@ -6,7 +6,8 @@ import {saveArticleActions,saveArticleTypes,
         editArticleActions,editArticleTypes,
         getHtmlActions, getHtmlTypes,
         editNameActions,editNameTypes,
-        deleteArticleActions,deleteArticleTypes
+        deleteArticleActions,deleteArticleTypes,
+        searchArticleActions,searchArticleTypes
 } from "../actions"
 
 import * as endPoints from './endpoints'
@@ -231,6 +232,35 @@ const gethtml=createLogic({
     }
 })
 
+const searcharticle=createLogic({
+    type:searchArticleTypes.SEARCH_ARTICLE,
+    latest:true,
+    debounce:1000,
+
+    process({
+        action
+    },dispatch,done){
+        let HTTPclient=api
+
+        // debugger
+        console.log("payload check",action.payload)
+
+        HTTPclient.get(endPoints.SEARCH_ARTICLE+action.payload)
+            .then(resp=> {
+                // debugger
+                console.log(resp.data)
+                dispatch(searchArticleActions.searchArticleSuccess(resp.data))
+            })
+            .catch(err=>{
+                var errormsg="Failed to get Articles";
+                if (err && err.code === "ECONNABORTED") {
+                    errormsg = "Please check your internet connection.";
+                }
+                dispatch(searchArticleActions.searchArticleFail(errormsg))
+            }).then(()=>done());
+    }
+})
+
 export default [
     savearticle,
     downloadarticle,
@@ -238,5 +268,6 @@ export default [
     editarticle,
     gethtml,
     editarticlename,
-    deletearticle
+    deletearticle,
+    searcharticle
 ]

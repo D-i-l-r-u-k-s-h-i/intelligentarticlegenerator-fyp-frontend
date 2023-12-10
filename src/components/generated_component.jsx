@@ -8,6 +8,9 @@ import {Container ,Row,Col} from 'react-bootstrap'
 import { saveAs } from 'file-saver';
 import SaveArticleNameModal from './save_article_name_modal';
 import EditArticleModal from './edit_article_modal';
+import Highlighter from "react-highlight-words";
+import { Packer, Document, Paragraph} from "docx";
+const parBuild = require("paragraph-builder");
 
 export class GeneratedComponent extends Component {
     constructor(props){
@@ -24,8 +27,40 @@ export class GeneratedComponent extends Component {
     }
 
     onDownloadClick=()=>{
-        var blob = new Blob([this.state.item], { type: "text/pdf" });
+        var resultText = parBuild.toArray(this.state.item && this.state.item, 400);
+        // console.log(resultText)
+        var paras = resultText.join("\n\n")
+        // console.log(paras)
+        var blob = new Blob([paras], { type: "text/pdf" });
         saveAs(blob, `Article${Date()}`)
+    }
+
+    onImportClick=()=>{
+        const document = new Document();
+
+        var resultText = parBuild.toArray(this.state.item && this.state.item, 400); 
+        // var paras = resultText.join('\n\n')  
+        
+        var paragraphs=[]
+
+        resultText.map((itemm, indexx) => {
+            paragraphs.push(
+                new Paragraph({
+                    text: itemm,
+                    // heading: HeadingLevel.TITLE,
+                })
+            )
+        })
+
+        document.addSection({
+            children: paragraphs
+        })
+
+        Packer.toBlob(document).then(blob => {
+            // console.log(blob);
+            saveAs(blob, `Exported-Article${Date()}.docx`);
+            // console.log("Document created successfully");
+        });
     }
 
     render() {
@@ -64,9 +99,11 @@ export class GeneratedComponent extends Component {
             // setActiveIndex(newIndex);
           }
 
-        
-          const slides = items.map((item,index) => {
-            console.log(item.id)
+        // console.log(this.props.details)
+        const slides = items.map((item, index) => {
+            var resultText = parBuild.toArray(item,400);
+            console.log(resultText)
+            // console.log(item.id)
             return (
                 <CarouselItem
                     onExiting={() => this.setState({ animating: false })}
@@ -76,13 +113,24 @@ export class GeneratedComponent extends Component {
                     key={index}
 
                 >
-                    <CarouselCaption captionText={<div className="ex1">Sample No. {index+1} <br/><br/><br/> {item}</div>}/>
-                    
+
+                    <CarouselCaption captionText={<div className="ex1">Sample No. {index + 1} <br /><br /><br /> {resultText.map((itemm, indexx) => {
+                        return (
+                            <div><Highlighter
+                                highlightClassName="YourHighlightClass"
+                                searchWords={this.props.details && this.props.details.match(/\b(\w+)\b/g)}
+                                autoEscape={true}
+                                textToHighlight={itemm == ""?item:itemm}
+                                className="ex2"
+                            /><br/><br/></div>
+                        )
+                    })}</div>} />
+
                     {/* <img src={item.src} alt={item.altText} /> */}
                     {/* <CarouselCaption captionText={<div class="ex2">{item}</div>}/> */}
                 </CarouselItem>
             );
-          });
+        });
 
         return (
             <div>
@@ -123,6 +171,7 @@ export class GeneratedComponent extends Component {
                         </Col>
                         <Col>
                             <button type="button" onClick={this.onDownloadClick} className="btn btn-primary btn-lg">Download</button><br/><br/>
+                            <button type="button" onClick={this.onImportClick} className="btn btn-info btn p-2.5">Import As Docx</button><br/><br/>
                             <button type="button" onClick={() => this.setState({ editModalShow: true })} className="btn btn-secondary btn-lg">Edit</button><br/><br/>
                             <button type="button" onClick={() => this.setState({ modalShow: true })} className="btn btn-warning btn-lg">Save</button><br /><br />
                             
